@@ -1,0 +1,56 @@
+<pre>
+<span style="font-family: Consolas">
+<span style="color: #800000">&lt;?php</span>
+
+<span style="color: #0000ff">$</span><span style="color: #008080">servername </span><span style="color: #800000">=</span><span style="color: #ff00ff">&quot;localhost&quot;</span><span style="color: #800000">;</span>
+<span style="color: #0000ff">$</span><span style="color: #008080">username </span><span style="color: #800000">= </span><span style="color: #ff00ff">&quot;root&quot;</span><span style="color: #800000">;</span>
+<span style="color: #0000ff">$</span><span style="color: #008080">password </span><span style="color: #800000">= </span><span style="color: #ff00ff">&quot;&quot;</span><span style="color: #800000">;</span>
+<span style="color: #0000ff">$</span><span style="color: #008080">dbname </span><span style="color: #800000">= </span><span style="color: #ff00ff">&quot;codeflix&quot;</span><span style="color: #800000">;</span>
+
+<span style="color: #0000ff">$</span><span style="color: #008080">conn </span><span style="color: #800000">= </span><span style="color: #0000ff">new </span><span style="color: #800000">mysqli(</span><span style="color: #0000ff">$</span><span style="color: #008080">servername</span><span style="color: #800000">, </span><span style="color: #0000ff">$</span><span style="color: #008080">username</span><span style="color: #800000">, </span><span style="color: #0000ff">$</span><span style="color: #008080">password</span><span style="color: #800000">, </span><span style="color: #0000ff">$</span><span style="color: #008080">dbname</span><span style="color: #800000">);</span>
+
+<span style="color: #0000ff">if</span><span style="color: #800000">(</span><span style="color: #0000ff">$</span><span style="color: #008080">conn</span><span style="color: #800000">-&gt;connect_error){</span>
+	<span style="color: #0000ff">die</span><span style="color: #800000">(</span><span style="color: #ff00ff">&quot;connection failed&quot;</span><span style="color: #800000">);</span>
+<span style="color: #800000">}</span>
+
+<span style="color: #0000ff">$</span><span style="color: #008080">email </span><span style="color: #800000">= </span><span style="color: #0000ff">$</span><span style="color: #008080">_POST</span><span style="color: #800000">[</span><span style="color: #ff00ff">&quot;email&quot;</span><span style="color: #800000">];</span>
+<span style="color: #0000ff">$</span><span style="color: #008080">password </span><span style="color: #800000">= </span><span style="color: #0000ff">$</span><span style="color: #008080">_POST</span><span style="color: #800000">[</span><span style="color: #ff00ff">&quot;password&quot;</span><span style="color: #800000">];</span>
+<span style="color: #0000ff">$</span><span style="color: #008080">salt </span><span style="color: #800000">= </span><span style="color: #ff00ff">&quot;codeflix&quot;</span><span style="color: #800000">;</span>
+<span style="color: #0000ff">$</span><span style="color: #008080">password_encrypted </span><span style="color: #800000">= </span><span style="color: #ff0000">sha1</span><span style="color: #800000">(</span><span style="color: #0000ff">$</span><span style="color: #008080">password</span><span style="color: #800000">.</span><span style="color: #0000ff">$</span><span style="color: #008080">salt</span><span style="color: #800000">);</span>
+
+
+<span style="color: #0000ff">$</span><span style="color: #008080">sql </span><span style="color: #800000">= mysqli_query(</span><span style="color: #0000ff">$</span><span style="color: #008080">conn</span><span style="color: #800000">, </span><span style="color: #ff00ff">&quot;SELECT count(*) as total from signup WHERE email = '&quot;</span><span style="color: #800000">.</span><span style="color: #0000ff">$</span><span style="color: #008080">email</span><span style="color: #800000">.</span><span style="color: #ff00ff">&quot;' and </span>
+	<span style="color: #ff00ff">password = '&quot;</span><span style="color: #800000">.</span><span style="color: #0000ff">$</span><span style="color: #008080">password_encrypted</span><span style="color: #800000">.</span><span style="color: #ff00ff">&quot;'&quot;</span><span style="color: #800000">);</span>
+
+
+<span style="color: #0000ff">$</span><span style="color: #008080">row </span><span style="color: #800000">= mysqli_fetch_array(</span><span style="color: #0000ff">$</span><span style="color: #008080">sql</span><span style="color: #800000">);</span>
+
+
+<span style="color: #0000ff">if</span><span style="color: #800000">(</span><span style="color: #0000ff">$</span><span style="color: #008080">row</span><span style="color: #800000">[</span><span style="color: #ff00ff">&quot;total&quot;</span><span style="color: #800000">] &gt; </span><span style="color: #800080">0</span><span style="color: #800000">){</span>
+	<span style="color: #800000">?&gt;</span>
+<span style="color: #000000">	</span><span style="color: #0000ff">&lt;script&gt;</span>
+	<span style="color: #ff0000">window</span><span style="color: #800000">.</span><span style="color: #ff0000">location</span><span style="color: #800000">.href=</span><span style="color: #ff00ff">'index.html'</span><span style="color: #800000">;</span>
+	<span style="color: #800000">alert(</span><span style="color: #ff00ff">'Login successful'</span><span style="color: #800000">);</span>
+	<span style="color: #0000ff">&lt;/script&gt;</span>
+<span style="color: #000000">	</span>
+<span style="color: #000000">	</span>
+<span style="color: #000000">	</span><span style="color: #800000">&lt;?php</span>
+<span style="color: #800000">}</span>
+<span style="color: #0000ff">else</span><span style="color: #800000">{</span>
+	<span style="color: #800000">?&gt;</span>
+<span style="color: #000000">	</span><span style="color: #0000ff">&lt;script&gt;</span>
+		<span style="color: #800000">alert(</span><span style="color: #ff00ff">'Login failed'</span><span style="color: #800000">);</span>
+	<span style="color: #0000ff">&lt;/script&gt;</span>
+<span style="color: #000000">	</span><span style="color: #800000">&lt;?php</span>
+<span style="color: #800000">}</span>
+
+
+
+
+
+
+
+
+<span style="color: #800000">?&gt;</span>
+</span>
+</pre>
